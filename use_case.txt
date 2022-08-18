@@ -1,0 +1,27 @@
+web: đăng tải và chia sẻ ảnh (like pinteres)
+các chức năng:
+	+ user:
+		+ đăng nhập
+			+ đăng nhập
+			+ đăng ký
+			+ quên mật khẩu
+		+ xem ảnh: sắp xếp theo thời gian đăng
+		+ tìm kiếm ảnh: theo chủ đề, bằng tiêu đề
+		+ lưu ảnh vào kho lưu trữ trong hồ sơ cá nhân
+		+ đăng ảnh: tiêu đề, chủ đề, mô tả
+		+ bình luận
+		+ like ảnh
+		+ báo cáo ảnh
+		+ phản hồi ý kiến
+	+ admin
+		+ đăng nhập
+		+ quên mật khẩu
+		+ xem ảnh: sắp xếp theo thời gian đăng
+		+ tìm kiếm ảnh: theo chủ đề, bằng tiêu đề
+		+ lưu ảnh vào kho lưu trữ trong hồ sơ cá nhân
+		+ đăng ảnh: tiêu đề, chủ đề, mô tả
+		+ bình luận
+		+ like ảnh
+		+ xem các báo cáo
+		+ xóa ảnh
+		+ ban acc
