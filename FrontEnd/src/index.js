@@ -3,11 +3,23 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import '@fortawesome/fontawesome-free/css/all.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import store from '../src/app/store'
+// keen
+// import '../src/assets/styles/keen/theme07/style.bundle.css';
+import '../src/assets/styles/keen/theme07/style.bundle.css';
+// app custom style
+import '../src/assets/styles/app.style.scss';
+import './index.css';
+import { Provider } from 'react-redux';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
   </React.StrictMode>
 );
 

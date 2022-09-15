@@ -1,10 +1,14 @@
 const User = require('../models/User');
-var sha256 = require('js-sha256');
+const sha256 = require('js-sha256');
 const {
     response
 } = require('express');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+const moment = require("moment");
+const sequelize = require("sequelize");
+
 
 
 const authController = {
@@ -14,21 +18,33 @@ const authController = {
     //REGISTER
     registerUser: async function (req, res) {
         try {
+            //check user existent
+            let checkUser = await User.findOne({
+                email: req.body.email
+            });
+
+            if (checkUser) {
+                return res.status(200).json({
+                    success: false,
+                    message: 'account already registered',
+                })
+            }
+
             const hashed = await sha256(req.body.password);
             //create a new user
             const newUser = new User({
                 username: req.body.username,
                 email: req.body.email,
                 password: hashed,
-            })
+            });
 
             //save to database
-            const user = await newUser.save();
+            await newUser.save();
 
-            res.status(200).send(user);
+            res.status(200).json(newUser);
 
         } catch (err) {
-            res.status(500).send('cant register');
+            res.status(500).json('cant register');
         }
     },
 
@@ -67,10 +83,12 @@ const authController = {
     //LOGIN
     loginUser: async function (req, res) {
         try {
-            const user = await User.findOne({
+            
+
+            const account = await User.findOne({
                 email: req.body.email
             });
-            if (!user) {
+            if (!account) {
                 res.status(404).json({
                     success: true,
                     message: "Wrong email",
@@ -78,7 +96,7 @@ const authController = {
             }
 
             const hashed = await sha256(req.body.password);
-            const validPassword = hashed === user.password;
+            const validPassword = hashed === account.password;
 
             if (!validPassword) {
                 res.status(404).json({
@@ -87,28 +105,49 @@ const authController = {
                 })
             }
 
-            if (user && validPassword) {
+            // if (user && validPassword) {
 
-                const accessToken = authController.generatingAccessToken(user);
-                const refreshToken = authController.generatingRefreshToken(user);
+            //     const accessToken = authController.generatingAccessToken(user);
+            //     const refreshToken = authController.generatingRefreshToken(user);
 
-                res.cookie('refreshToken', refreshToken, {
-                    httpOnly: true,
-                    secure: false,
-                    path: '/',
-                    sameSite: 'strict',
-                })
 
-                const {
-                    password,
-                    ...others
-                } = user._doc;
+            //     const {
+            //         password,
+            //         ...others
+            //     } = user._doc;
 
-                res.status(200).send({
-                    ...others,
+            //     res.status(200).json({
+            //         ...others,
+            //         accessToken,
+            //     });
+            // }
+
+
+            if (
+                !account.accessToken ||
+                moment(account.expirationDateToken).diff(moment.now()) <
+                0
+            ) {
+                var accessToken = authController.generatingAccessToken(account);
+                var expirationDate = new Date();
+                expirationDate = expirationDate.setTime(
+                    expirationDate.getTime() + 24 * 3600 * 1000
+                ); // 24 hours
+                var expirationDateStr = moment(expirationDate)
+                    .format("YYYY-MM-DD HH:mm:ss")
+                    .toString();
+                await account.updateOne({
                     accessToken,
+                    expirationDateToken: expirationDateStr,
                 });
             }
+
+            res.send({
+                result: "success",
+                account: account.toJSON(),
+            });
+
+
         } catch (err) {
             res.status(500).json({
                 success: false,
@@ -174,6 +213,41 @@ const authController = {
             res.status(500).json({
                 success: false,
                 message: "Log out unsuccessful",
+            })
+        }
+    },
+
+    changePassword: async function (req, res) {
+        try {
+            const user = await User.findOne({
+                email: req.body.email
+            });
+
+            const password = await sha256(req.body.password);
+            const newPassword = await sha256(req.body.newPassword);
+            if (user) {
+                if (password === user.password) {
+                    await User.findByIdAndUpdate(user.id, {
+                        password: newPassword,
+                    })
+                    res.status(200).json({
+                        success: true,
+                        message: "Change password successfully",
+                    })
+                }
+                res.status(400).json({
+                    success: false,
+                    message: "Password incorrect",
+                })
+            }
+            res.status(400).json({
+                success: false,
+                message: "Wrong email",
+            })
+        } catch (err) {
+            res.status(400).json({
+                success: false,
+                error: err,
             })
         }
     }

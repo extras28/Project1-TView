@@ -16,5 +16,8 @@ router.post('/refresh', authController.requestRefreshToken);
 //log out
 router.post('/logout', authMiddleware.verifyToken, authController.logoutUser);
 
+//change password
+router.put('/change-password', authController.changePassword);
+
 
 module.exports = router;

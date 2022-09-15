@@ -2,7 +2,7 @@ const User = require('../models/User');
 
 const userController = {
     // get all users
-    getAllUsers: async function(req, res) {
+    getAllUsers: async function (req, res) {
         try {
             const users = await User.find();
             res.status(200).send(users);
@@ -12,11 +12,10 @@ const userController = {
     },
 
     //delete one or more users
-    deleteUser: async function(req, res){
+    deleteUser: async function (req, res) {
         try {
-            const user = await User.findById(req.params.id);
-            res.send('delete');
-        }catch (err) {
+            await User.findByIdAndDelete(req.params.id);
+        } catch (err) {
             res.status(500).send(err);
         }
     }

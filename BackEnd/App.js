@@ -1,11 +1,28 @@
-const port = 3000;
+const port = 8000;
 const express = require('express');
-const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const db = require('./config/db/index');
 const route = require('./routes/index');
+const cors = require('cors');
 
 const app = express();
+
+const corsOpts = {
+  origin: '*',
+  methods: [
+      'GET',
+      'POST',
+      'PUT',
+      'DELETE'
+  ],
+
+  allowedHeaders: [
+      'Content-Type',
+      'Authorization'
+  ],
+};
+
+app.use(cors(corsOpts));
 
 
 // connect to database

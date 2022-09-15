@@ -1,0 +1,8 @@
+.HeaderDashboard{
+    height: 80px;
+    &_Logo{
+        &:hover{
+            cursor: pointer;
+        }
+    }
+}

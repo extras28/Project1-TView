@@ -1,0 +1,17 @@
+.SignUpScreen {
+    background-image: url('../../../../assets/images/img_bg.jpg');
+    background-size: cover;
+}
+
+.form-check-input {
+    &:checked {
+        background-color: #93CD54 !important;
+        border-color: #93CD54 !important;
+    }
+
+    &:focus {
+        box-shadow: 0 0 0 0.25rem rgba(120, 170, 98, 0.25) !important;
+        border-color: #a5b495 !important;
+    }
+}
+    
