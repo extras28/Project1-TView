@@ -43,10 +43,15 @@ function SignInScreen(props) {
             console.log(`${sTag} on submit: ${JSON.stringify(params)}`);
             try {
                 const res = unwrapResult(await dispatch(thunkSignIn(params)));
+                console.log(res);
                 if (res) {
                     const displayName = UserHelper.getDisplayName(res.account);
                     ToastHelper.showSuccess(`Xin chào, ${displayName}`);
-                    navigate('/dashboard');
+                    if(res.account.isAdmin){
+                        navigate('/admin');
+                    } else {
+                        navigate('/dashboard');
+                    }
                 }
             } catch (error) {
                 console.log(`${sTag} loggin error: ${error.message}`);

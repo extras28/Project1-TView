@@ -9,4 +9,13 @@ router.get('/', authMiddleware.verifyTokenAndAdminAuth, userController.getAllUse
 //delete users
 router.delete('/delete/:id',authMiddleware.verifyTokenAndAdminAuth, userController.deleteUser);
 
+//get user infor
+router.get('/detail/:id', userController.getInfor);
+
+//get own infor
+router.get('/profile', userController.getInfor);
+
+//edit profile
+router.post('/edit-profile', userController.editProfile)
+
 module.exports = router;

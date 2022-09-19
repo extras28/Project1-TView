@@ -1,0 +1,22 @@
+.ImageDetailScreen {
+    &_Card {
+        border-radius: 32px;
+    }
+
+    &_Image {
+        overflow: hidden;
+        position: relative;
+        border: none;
+        border-radius: 32px 0px 0px 32px;
+        img {
+            object-fit: cover;
+            width: 100%;
+            height: auto;
+        }
+    }
+}
+@media (max-width: 992px) {
+    .ImageDetailScreen_Image{
+        border-radius: 32px
+    }
+}

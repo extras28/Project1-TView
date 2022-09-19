@@ -4,6 +4,7 @@ import SignInScreen from "./features/Auth/screens/SignInScreen";
 import GuestRoute from "./general/components/AppRoutes/GuestRoute";
 import PrivateRoute from "./general/components/AppRoutes/PrivateRoute";
 import SignUpScreen from "./features/Auth/screens/SignUpScreen";
+import "react-toastify/dist/ReactToastify.css";
 
 //load bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,6 +14,12 @@ import AppNotFound from './general/components/AppNotFound';
 import AppToast from './general/components/AppToast';
 import Dashboard from './features/Dashboard';
 import Account from './features/Account';
+import Admin from './Admin';
+import AccountListener from './features/Account/AccountListener';
+import ForgotPasswordScreen from './features/Auth/screens/ForgotPassScreen';
+import ResetPasswordScreen from './features/Auth/screens/ResetPassScreen';
+import ImageDetailScreen from './features/IgameDetailScreen';
+import Upload from './features/Upload';
 
 require("bootstrap/dist/js/bootstrap.min");
 // Load KT plugins
@@ -67,17 +74,33 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route
+              path="admin/*"
+              element={
+                <PrivateRoute>
+                  <Admin />
+                </PrivateRoute>
+              }
+            />
             
             
             {/* Account */}
-            {/* <Route
-              path="account/*"
+            <Route
+              path="/pin*"
               element={
                 <PrivateRoute>
-                  <Account />
+                  <ImageDetailScreen />
                 </PrivateRoute>
               }
-            /> */}
+            />
+            <Route
+              path="/upload"
+              element={
+                <PrivateRoute>
+                  <Upload />
+                </PrivateRoute>
+              }
+            />
             <Route
               path="/sign-in"
               element={
@@ -94,22 +117,22 @@ function App() {
                 </GuestRoute>
               }
             />
-            {/* <Route
+            <Route
               path="/forgot-pass"
               element={
                 <GuestRoute>
                   <ForgotPasswordScreen />
                 </GuestRoute>
               }
-            /> */}
-            {/* <Route
+            />
+            <Route
               path="/reset-pass"
               element={
                 <GuestRoute>
                   <ResetPasswordScreen />
                 </GuestRoute>
               }
-            /> */}
+            />
 
             {/* Not Found */}
             <Route path="*" element={<AppNotFound />} />
@@ -124,7 +147,7 @@ function App() {
       {/* Listener */}
       {/* <DataCommonListener /> */}
       {/* Account Listener */}
-      {/* <AccountListener /> */}
+      <AccountListener />
     </>
   );
 }

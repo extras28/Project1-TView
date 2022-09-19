@@ -4,12 +4,12 @@ const authMiddleware = {
 
     //verify token
     verifyToken: (req, res, next) => {
-        const token = req.headers.token;
+        const token = req.headers.authorization;
         if(token) {
             const accessToken = token.split(' ')[1];
             jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN, (err, user) => {
                 if(err) {
-                    res.status(403).send('Token is not valid');
+                    res.status(403).send(err);
                 }
                 req.user = user;
                 next();

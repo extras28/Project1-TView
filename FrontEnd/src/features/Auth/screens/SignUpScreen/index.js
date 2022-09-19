@@ -42,9 +42,7 @@ function SignUpScreen(props) {
             try {
                 const res = await authApi.signUp(params);
                 if (res) {
-                    localStorage.setItem(PreferenceKeys.savedEmail, values.email);
-                    localStorage.setItem(PreferenceKeys.savedPassword, /*values.password*/ '');
-                    ToastHelper.showSuccess('Đăng ký thành công, vui lòng vào email để kích hoạt tài khoản !!!');
+                    ToastHelper.showSuccess('Đăng ký thành công');
                     navigate('/sign-in');
                 }
             } catch (err) {
@@ -100,7 +98,7 @@ function SignUpScreen(props) {
                                         <div>
                                             <BaseTextField
                                                 label='Họ tên'
-                                                name='signin'
+                                                name='username'
                                                 type='text'
                                                 placeholder='Nhập họ tên'
                                                 fieldHelper={formik.getFieldHelpers('username')}
@@ -112,7 +110,7 @@ function SignUpScreen(props) {
                                             <div>
                                                 <BaseTextField 
                                                     label='Email (*)'
-                                                    name='signin'
+                                                    name='email'
                                                     type='text'
                                                     placeholder='Nhập email'
                                                     fieldHelper={formik.getFieldHelpers('email')}
@@ -124,7 +122,7 @@ function SignUpScreen(props) {
                                         <div>
                                             <BaseTextField 
                                                 label='Mật khẩu (*)'
-                                                name='signin'
+                                                name='password'
                                                 type='password'
                                                 placeholder='Nhập mật khẩu'
                                                 fieldHelper={formik.getFieldHelpers('password')}

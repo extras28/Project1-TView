@@ -1,34 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './style.scss'
+import { useNavigate } from 'react-router-dom';
 
 CardDisplay.propTypes = {
-    size: PropTypes.string,
     src: PropTypes.string,
+    imgId: PropTypes.string,
 };
 
 CardDisplay.defaultProps = {
-    size: null,
     src: null,
+    imgId: null,
 };
-const styles = {
-    small: {
-        gridRowEnd: 'span 26'
-    },
-    medium: {
-        gridRowEnd: 'span 33'
-    },
-    large: {
-        gridRowEnd: 'span 45'
-    }
-}
+
 
 function CardDisplay(props) {
-    const { size, src } = props;
+    const { src, imgId } = props;
+    const navigate = useNavigate();
+
+    function handleViewDetail(){
+        navigate(`/pin/${imgId}`)
+    }
     return (
-        <div className='CardDisplay' style={{
-            ...styles[size]
-        }}>
+        <div 
+            className='CardDisplay' 
+            onClick={handleViewDetail}
+        >
         <img alt='' src={src}
         />
         </div>

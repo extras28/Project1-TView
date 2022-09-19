@@ -7,6 +7,8 @@ import CardDisplay from '../../../../general/components/CardDisplay';
 import Masonry, {ResponsiveMasonry} from "react-responsive-masonry";
 import Zoom from 'react-reveal/Zoom';
 import './style.scss';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 
 PersonalPage.propTypes = {
@@ -121,6 +123,10 @@ const fakeData = [
 ]
 
 function PersonalPage(props) {
+
+    const currentAccount = useSelector(state => state.auth.currentAccount);
+    const navigate = useNavigate();
+
     return (
         <BaseLayoutDashboard>
             <div className='PersonalPage d-flex flex-column bg-white'>
@@ -130,13 +136,22 @@ function PersonalPage(props) {
                         src='https://scontent.fhan5-2.fna.fbcdn.net/v/t1.6435-9/154736541_2996524153926002_2036828814064585917_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=9bcs9tDn568AX9ZrTZN&_nc_ht=scontent.fhan5-2.fna&oh=00_AT-DfIA8PmUDBBv5rT3KlUOBsFLLBZQUWd_TaB1OASptqQ&oe=633F2C3B'
                         size='120px'
                     />
-                    <span style={{fontSize: '36px', fontWeight: '600'}}>Nguyễn Anh Dũng</span>
-                    <span style={{fontSize: '14px', color: '#767676'}}>@dungna</span>
-                    <span style={{fontSize: '16px', color: '#111', fontWeight: '400'}}>2811 người theo dõi</span>
-                    <AppButton style={{border: '1px solid #2E8FE9', backgroundColor: '#FFFFFF', color: '#2E8FE9'}} className='btn-grey my-5' text='Chỉnh sửa hồ sơ'/>
+                    <span style={{fontSize: '36px', fontWeight: '600'}}>{currentAccount?.username}</span>
+                    <AppButton 
+                        style = {
+                            {
+                                border: '1px solid #2E8FE9',
+                                backgroundColor: '#FFFFFF',
+                                color: '#2E8FE9'
+                            }
+                        }
+                        className = 'btn-grey my-5'
+                        text = 'Thông tin cá nhân'
+                        onClick={()=>navigate('/account/profile')}
+                    />
                 </div>
 
-                <span className='PersonalPage_Profile py-5 text-center sticky-top bg-white' style={{fontSize: '20px', fontWeight: '600', height: '80px'}}>Ảnh của bạn</span>
+                <span className='PersonalPage_Profile py-5 text-center sticky-top bg-white' style={{fontSize: '20px', fontWeight: '600', height: '80px'}}>Tất cả ảnh</span>
 
                 <div className='d-flex flex-column align-items-center mt-5'>
                     <div  className='min-vh-100 w-100'>

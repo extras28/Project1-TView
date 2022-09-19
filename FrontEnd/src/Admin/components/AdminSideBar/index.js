@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import AppResource from '../../../general/constants/AppResource';
 import './style.scss';
+import { thunkSignOut } from '../../../app/authSlice';
 
 AdminSideBar.propTypes = {
     
@@ -12,6 +14,7 @@ function AdminSideBar(props) {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const dispatch = useDispatch();
 
     function handleOnPage(url){
         navigate(url);
@@ -45,7 +48,10 @@ function AdminSideBar(props) {
             </div>
 
             {/* log out button */}
-            <div className='AdminSideBar_Logout d-flex flex-row align-items-center m-5 '>
+            <div className='AdminSideBar_Logout d-flex flex-row align-items-center m-5' onClick={()=>{
+                dispatch(thunkSignOut());
+                navigate('/')
+                }}>
                 <i className="fa-solid fa-right-from-bracket fa-2x me-3"></i>
                 Đăng xuất
             </div>

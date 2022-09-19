@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const User = new mongoose.Schema({
     username: {
         type: String,
-        required: true,
     },
     email: {
         type: String,
@@ -18,8 +17,16 @@ const User = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    gender: String,
+    address: String,
+    phone: String,
+    dob: String,
+    avatar: String,
     accessToken: String,
     expirationDateToken: Date,
-}, { timestamps: true });
+    resetPasswordToken: String,
+    expirationDateResetPasswordToken: String,
+});
+
 
 module.exports = mongoose.model('User', User);

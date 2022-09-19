@@ -27,7 +27,7 @@ const UserHelper = {
     // Get display name
     getDisplayName: (account) => {
         if (account) {
-            return account.fullname ?? account.email ?? 'Unknown';
+            return account.username ?? account.email ?? 'Unknown';
         }
         return '';
     },

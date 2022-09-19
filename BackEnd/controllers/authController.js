@@ -8,6 +8,14 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const moment = require("moment");
 const sequelize = require("sequelize");
+const {
+    generateRandomStr
+} = require('../utils');
+const {
+    findOne
+} = require('../models/User');
+const sendEmail = require('../utils/nodemailer');
+
 
 
 
@@ -19,32 +27,38 @@ const authController = {
     registerUser: async function (req, res) {
         try {
             //check user existent
-            let checkUser = await User.findOne({
+            let account = await User.findOne({
                 email: req.body.email
             });
 
-            if (checkUser) {
+            if (account) {
                 return res.status(200).json({
                     success: false,
                     message: 'account already registered',
                 })
-            }
+            };
 
             const hashed = await sha256(req.body.password);
-            //create a new user
-            const newUser = new User({
+
+            const user = new User({
                 username: req.body.username,
                 email: req.body.email,
                 password: hashed,
-            });
+                accessToken: '',
+                expirationDateToken: null,
+                gender: 'UNKNOWN',
+                dob: null,
+                avatar: '',
+                address: '',
+                phone: '',
+            })
 
-            //save to database
-            await newUser.save();
+            await user.save();
 
-            res.status(200).json(newUser);
-
+            return res.status(200).json(user);
         } catch (err) {
-            res.status(500).json('cant register');
+
+            res.status(500).json(err);
         }
     },
 
@@ -56,7 +70,7 @@ const authController = {
                     admin: user.isAdmin
                 },
                 process.env.JWT_ACCESS_TOKEN, {
-                    expiresIn: "20s"
+                    expiresIn: "2h"
                 }
 
             )
@@ -83,13 +97,12 @@ const authController = {
     //LOGIN
     loginUser: async function (req, res) {
         try {
-            
-
             const account = await User.findOne({
                 email: req.body.email
             });
+
             if (!account) {
-                res.status(404).json({
+                return res.status(404).json({
                     success: true,
                     message: "Wrong email",
                 });
@@ -99,28 +112,12 @@ const authController = {
             const validPassword = hashed === account.password;
 
             if (!validPassword) {
-                res.status(404).json({
+                return res.status(404).json({
                     success: false,
                     message: "Wrong password",
                 })
             }
 
-            // if (user && validPassword) {
-
-            //     const accessToken = authController.generatingAccessToken(user);
-            //     const refreshToken = authController.generatingRefreshToken(user);
-
-
-            //     const {
-            //         password,
-            //         ...others
-            //     } = user._doc;
-
-            //     res.status(200).json({
-            //         ...others,
-            //         accessToken,
-            //     });
-            // }
 
 
             if (
@@ -128,23 +125,29 @@ const authController = {
                 moment(account.expirationDateToken).diff(moment.now()) <
                 0
             ) {
-                var accessToken = authController.generatingAccessToken(account);
+
+                var accessToken = generateRandomStr(32);
                 var expirationDate = new Date();
-                expirationDate = expirationDate.setTime(
-                    expirationDate.getTime() + 24 * 3600 * 1000
-                ); // 24 hours
-                var expirationDateStr = moment(expirationDate)
+                var time = expirationDate.getTime();
+                var time1 = time + 24 * 3600 * 1000;
+                var setTime = expirationDate.setTime(time1);
+                var expirationDateStr = moment(setTime)
                     .format("YYYY-MM-DD HH:mm:ss")
                     .toString();
+
                 await account.updateOne({
-                    accessToken,
+                    accessToken: accessToken,
                     expirationDateToken: expirationDateStr,
                 });
             }
+            const responseAccount = await User.findOne({
+                _id: account._id
+            })
 
-            res.send({
+
+            return res.send({
                 result: "success",
-                account: account.toJSON(),
+                account: responseAccount.toJSON(),
             });
 
 
@@ -203,18 +206,29 @@ const authController = {
 
     logoutUser: async function (req, res) {
         try {
-            res.clearCookie('refreshToken');
-            authController.refreshTokens = authController.refreshTokens.filter(token => token !== req.cookies.refreshToken);
-            res.status(200).json({
-                success: true,
-                message: "Log out successfully",
+            const accessToken = req.headers.authorization.split(' ')[1];
+            const account = await User.findOne({
+                accessToken: accessToken
+            });
+            await account.updateOne({
+                accessToken: null,
+                expirationDateToken: null,
+            });
+
+            const responseAccount = await User.findOne({
+                _id: account._id
             })
-        } catch (err) {
-            res.status(500).json({
-                success: false,
-                message: "Log out unsuccessful",
-            })
+            res.send({
+                responseAccount,
+                result: "success",
+            });
+        } catch (error) {
+            res.status(500).send({
+                result: "failed",
+                reason: error.message,
+            });
         }
+
     },
 
     changePassword: async function (req, res) {
@@ -248,6 +262,102 @@ const authController = {
             res.status(400).json({
                 success: false,
                 error: err,
+            })
+        }
+    },
+
+    requestResetPassword: async function (req, res) {
+        try {
+            let {
+                email
+            } = req.body;
+
+            let account = await User.findOne({
+                email: email
+            });
+
+
+
+            if (!account) {
+                return res.send({
+                    result: 'failed',
+                    message: 'email không hợp lệ'
+                })
+            };
+            var random = 100000 + Math.random() * 900000;
+            var plainResetPasswordToken = Math.floor(random);
+
+            var expirationDate = new Date();
+            var time = expirationDate.getTime();
+            var time1 = time + 5 * 60 * 1000;
+            var setTime = expirationDate.setTime(time1);
+            var expirationDateStr = moment(setTime)
+                .format("YYYY-MM-DD HH:mm:ss")
+                .toString();
+
+            await User.findOneAndUpdate({
+                email: email
+            }, {
+                resetPasswordToken: plainResetPasswordToken,
+                expirationDateResetPasswordToken: expirationDateStr
+            });
+
+
+
+            res.send({
+                result: 'success',
+                expirationDate: moment(expirationDate).toDate(),
+            });
+
+            await sendEmail(email, 'TView Your reset password code', plainResetPasswordToken);
+        } catch (error) {
+            res.send({
+                result: 'failed',
+                message: error
+            })
+        }
+    },
+
+    resetPassword: async (req, res) => {
+        try {
+            let {
+                email,
+                resetPasswordToken,
+                newPassword
+            } = req.body;
+
+            let account = await User.findOne({
+                email: email
+            });
+
+
+            if (!account) {
+                return res.send({
+                    result: 'failed',
+                    message: 'Đổi mật khẩu không thành công'
+                })
+            }
+
+            if (account.resetPasswordToken === resetPasswordToken) {
+                await User.findOneAndUpdate({
+                    email: email
+                }, {
+                    resetPasswordToken: null,
+                    expirationDateResetPasswordToken: null,
+                    password: newPassword,
+                })
+                return res.send({
+                    result: 'success',
+                    message: 'Thay đổi mật khẩu thành công'
+                })
+            }
+
+
+
+        } catch (error) {
+            res.send({
+                result: 'failed',
+                message: error
             })
         }
     }

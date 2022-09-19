@@ -14,10 +14,15 @@ router.post('/login', authController.loginUser);
 router.post('/refresh', authController.requestRefreshToken);
 
 //log out
-router.post('/logout', authMiddleware.verifyToken, authController.logoutUser);
+router.post('/logout',  authController.logoutUser);
 
 //change password
 router.put('/change-password', authController.changePassword);
 
+//forgot password
+router.post('/request-reset-password', authController.requestResetPassword)
+
+//reset password
+router.post('/reset-password', authController.resetPassword);
 
 module.exports = router;
