@@ -33,7 +33,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 route(app);
-
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`Example app listening at http://localhost:${PORT}`)
 })

@@ -19,9 +19,8 @@
     "moment": "^2.29.4",
     "mongoose": "^6.5.2",
     "nodemailer": "^6.7.8",
+    "nodemon": "^2.0.20",
     "sequelize": "^6.21.6"
   },
-  "devDependencies": {
-    "nodemon": "^2.0.19"
-  }
+  "devDependencies": {}
 }
