@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import PropTypes, { func } from 'prop-types';
 import HeaderDashboard from '../../general/components/Headers/HaederDashboard';
 import { Card } from 'react-bootstrap';
 import './style.scss';
@@ -7,14 +7,19 @@ import AppAvatar from '../../general/components/AppAvatar';
 import AppButton from '../../general/components/AppButton';
 import BaseTextField from '../../general/components/Forms/BaseTextField';
 import AppResource from '../../general/constants/AppResource';
+import imageApi from 'api/imageApi';
+import { useSelector } from 'react-redux';
 
 ImageDetailScreen.propTypes = {
-    
+    imageId: PropTypes.string,
 };
 
 function ImageDetailScreen(props) {
-
     const [showComment, setShowComment] = useState(false);
+
+    const imageDetails = useSelector(state => state?.imageDetail?.image);
+
+
 
     return (
         <div className='ImageDetailScreen'>
@@ -26,24 +31,24 @@ function ImageDetailScreen(props) {
                     <div className='ImageDetailScreen_Image  w-lg-50 w-100 p-0'>
                         <img
                             className=''
-                            src='https://i.pinimg.com/564x/4e/75/e1/4e75e14922f26778554b2c8f8eda5365.jpg'
+                            src={imageDetails?.src}
                             alt='imgage'
                         />
                     </div>
 
                     {/* infor */}
                     <div className='d-flex flex-column w-lg-50 w-100 p-10'>
-                        <p className='font-weight-boldest' style={{fontSize: '36px'}}>Blue aesthetic wallpapers by nndtx.</p>
+                        <p className='font-weight-boldest' style={{fontSize: '36px'}}>{imageDetails?.title}</p>
                         <div className='d-flex flex-row align-items-center'>
                             <AppAvatar 
-                                src='https://scontent.fhan5-11.fna.fbcdn.net/v/t39.30808-6/299961861_1432442603886651_6267294896068632718_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=Ngw4ny7rcS0AX8xjB8f&tn=x9_hkC0FKZrBPJAp&_nc_ht=scontent.fhan5-11.fna&oh=00_AT8dqAY2zoteTvUvDPho7qb6GcH-jAFHi5l4vgy4EbSrEw&oe=632B3718'
+                                src={imageDetails?.avatar}
                                 size='48px'
                             />
                             <span className='ml-4 font-weight-boldest cursor-pointer' style={{fontSize: '18px'}}>
-                                Nguyễn Thu Trang
+                                {imageDetails?.username}
                             </span>
                         </div>
-                        <p className='mt-8'>Sage aesthetic wallpaper</p>
+                        <p className='mt-8'>{imageDetails?.description}</p>
 
                         {/* comment */}
                         <div>

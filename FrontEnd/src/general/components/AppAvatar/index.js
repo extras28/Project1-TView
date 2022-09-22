@@ -34,7 +34,18 @@ function AppAvatar(props) {
             height: size,
         }}
         onClick={()=>{clicked()}}>
-            <img src={src || AppResource.images.defaultAvatar} alt='avatar'/>
+            <img 
+                src = {
+                    src || AppResource.images.defaultAvatar
+                }
+                onError = {
+                    (e) => {
+                        e.target.onerror = null;
+                        e.target.src = AppResource.images.defaultAvatar
+                    }
+                }
+                alt='avatar'
+            />
         </div>
     );
 }

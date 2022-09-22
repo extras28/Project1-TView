@@ -116,7 +116,7 @@ const authSlice = createSlice({
         account
       } = action.payload;
       if (account) {
-        state.currentAccount = account;
+        state.currentAccount = {...account,...state.currentAccount};
         state.loggedIn = true;
 
         const {

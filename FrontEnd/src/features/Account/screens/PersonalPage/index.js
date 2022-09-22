@@ -7,8 +7,10 @@ import CardDisplay from '../../../../general/components/CardDisplay';
 import Masonry, {ResponsiveMasonry} from "react-responsive-masonry";
 import Zoom from 'react-reveal/Zoom';
 import './style.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { thunkGetOwnImages } from 'features/Account/AccountSlice';
 
 
 PersonalPage.propTypes = {
@@ -125,7 +127,15 @@ const fakeData = [
 function PersonalPage(props) {
 
     const currentAccount = useSelector(state => state.auth.currentAccount);
+    const myImages = useSelector(state => state.account.myImages);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const userId = currentAccount?.id
+
+
+    useEffect(()=>{
+            dispatch(thunkGetOwnImages());
+    },[])
 
     return (
         <BaseLayoutDashboard>
@@ -133,7 +143,7 @@ function PersonalPage(props) {
 
                 <div className='d-flex flex-column align-items-center pt-5'>
                     <AppAvatar 
-                        src='https://scontent.fhan5-2.fna.fbcdn.net/v/t1.6435-9/154736541_2996524153926002_2036828814064585917_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=9bcs9tDn568AX9ZrTZN&_nc_ht=scontent.fhan5-2.fna&oh=00_AT-DfIA8PmUDBBv5rT3KlUOBsFLLBZQUWd_TaB1OASptqQ&oe=633F2C3B'
+                        src={currentAccount?.avatar}
                         size='120px'
                     />
                     <span style={{fontSize: '36px', fontWeight: '600'}}>{currentAccount?.username}</span>
@@ -160,8 +170,8 @@ function PersonalPage(props) {
                             columnsCountBreakPoints={{576: 3, 768: 5, 992: 5, 1200: 7, 1400: 7}}
                             >
                                 <Masonry>
-                                {fakeData.map((item, index) => {
-                                            return <CardDisplay  src={item.src} key={index}/>
+                                {myImages.map((item, index) => {
+                                            return <CardDisplay  src={item.src} key={item._id}/>
                                         })}
                                 </Masonry>
                             </ResponsiveMasonry>

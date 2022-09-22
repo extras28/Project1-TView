@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Utils from '../../general/utils/Utils';
 import UserHelper from '../../general/helpers/UserHelper';
 import { thunkGetAccountInfor } from '../../app/authSlice';
+import { thunkGetOwnImages } from './AccountSlice';
 
 AccountListener.propTypes = {
 
@@ -20,6 +21,7 @@ function AccountListener(props) {
         console.log(`${sTag} loggedInUser changed`);
         if (Utils.isObjectEmpty(loggedInUser) && UserHelper.checkAccessTokenValid()) {
             dispatch(thunkGetAccountInfor());
+            dispatch(thunkGetOwnImages());
         }
 
     }, [loggedInUser]); 

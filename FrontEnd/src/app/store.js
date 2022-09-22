@@ -1,7 +1,9 @@
 // Import reducers
 import appReducer from "./appSlice";
 import  authReducer from "./authSlice";
-// import accountReducer from "../features/Account/accountSlice"
+import dashboardReducer from "../features/Dashboard/dashboardSlice.js";
+import accountReducer from "../features/Account/AccountSlice";
+import imageReducer from "../features/IgameDetailScreen/ImageSlice"
 
 const { configureStore } = require("@reduxjs/toolkit");
 
@@ -9,7 +11,9 @@ const { configureStore } = require("@reduxjs/toolkit");
 const rootReducer = {
     auth: authReducer,
     app: appReducer,
-    // account: accountReducer,
+    image: dashboardReducer,
+    account: accountReducer,
+    imageDetail: imageReducer,
 };
 
 // app store

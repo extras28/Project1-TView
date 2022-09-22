@@ -7,8 +7,9 @@ import AppResource from '../../../constants/AppResource';
 import AppAvatar from '../../AppAvatar';
 import { thunkSignOut } from '../../../../app/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AppDeleteModal from '../../AppModalDelete';
+import { thunkGetOwnImages } from 'features/Account/AccountSlice';
 
 HeaderDashboard.propTypes = {
     isPin: PropTypes.bool,
@@ -26,6 +27,7 @@ function HeaderDashboard(props) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [modalSignOut, setModalSignOut] = useState(false);
+    const currentAccount = useSelector(state => state?.auth?.currentAccount);
 
     function handleNavigate(url){
         navigate(url)
@@ -50,7 +52,17 @@ function HeaderDashboard(props) {
                 </div>
                 {!isPin && <AppSearchBar placeholder='Search' name='searchBarDashboard'/>}
                 <div className='d-flex flex-row'>
-                    <AppAvatar src='https://scontent.fhan5-2.fna.fbcdn.net/v/t1.6435-9/154736541_2996524153926002_2036828814064585917_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=9bcs9tDn568AX9ZrTZN&_nc_ht=scontent.fhan5-2.fna&oh=00_AT-DfIA8PmUDBBv5rT3KlUOBsFLLBZQUWd_TaB1OASptqQ&oe=633F2C3B' size='50px'  onClick={()=>handleNavigate('/account')}/>
+                    <AppAvatar 
+                        src = {
+                            currentAccount ?.avatar
+                        }
+                        size = '50px'
+                        onClick = {
+                            () => {
+                                handleNavigate('/account');
+                            }
+                        }
+                    />
                     <div>
                     <AppButton 
                         className='btn-red mx-4'

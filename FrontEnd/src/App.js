@@ -46,6 +46,7 @@ function App() {
     return () => {
       console.log(`${sTag} will dismiss`);
     };
+    
   }, []);
 
   return (
@@ -86,7 +87,7 @@ function App() {
             
             {/* Account */}
             <Route
-              path="/pin*"
+              path="/pin/*"
               element={
                 <PrivateRoute>
                   <ImageDetailScreen />

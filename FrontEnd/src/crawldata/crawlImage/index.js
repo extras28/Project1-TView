@@ -4,7 +4,7 @@ const crawlImage = [
         name: '',
         category: '',
         size: 'small',
-        src: 'https://scontent.fhan5-10.fna.fbcdn.net/v/t39.30808-6/305289184_1404488536706819_8291201142443144118_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=730e14&_nc_ohc=lzAdUZTRvIkAX8PGH7X&_nc_ht=scontent.fhan5-10.fna&oh=00_AT8vqcMY6U4I90oJH0UYRon2BPlUONxb3aduoGZGWQdK2A&oe=6320D313',
+        src: 'https://res.cloudinary.com/dc7pxknio/image/upload/v1663672492/fop5k9joynojmghj4e1a.jpg',
     },
     {
         id: '2',

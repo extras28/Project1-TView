@@ -45,13 +45,13 @@ function AccountInforScreen(props) {
 
     const [isEditing, setIsEditing] = useState(false);
     const [editedAvatar, setEditedAvatar] = useState();
+    const [imageToBase64, setImageToBase64] = useState('');
     const accountInforAvatar = useRef();
 
     const currentAccount = useSelector(state => state?.auth?.currentAccount);
 
     const formik = useFormik({
         initialValues: {
-            avatar: '',
             username: '',
             phone: '',
             address: '',
@@ -59,33 +59,51 @@ function AccountInforScreen(props) {
             gender: 'MALE',
         },
         onSubmit: (values) => {
+            const params = { ...values };
+            params.dob = Utils.formatAddDateTime(values.dob);
+            handleDeleteNullField(params);
             try {
-                unwrapResult(dispatch(thunkEditProfile({
-                    username: values.username,
-                    phone: values.phone,
-                    address: values.address,
-                    dob: Utils.formatAddDateTime(values.dob),
-                    gender: values.gender,
-                })));
+                unwrapResult(dispatch(thunkEditProfile(params)));
                 ToastHelper.showSuccess('Thay đổi thông tin cá nhân thành công')
             } catch (err) {
                 console.log(`${sTag} message: ${err}`);
                 ToastHelper.showError('Thay đổi thông tin thất bại')
             }
         },
-        validateYupSchema: Yup.object({
+        validationSchema: Yup.object({
             phone: Yup.string().trim().matches(/(\+84|03|05|07|08|09)+([0-9]{8,15})\b/, 'số điện thoại không hợp lệ'),  
         })
     });
 
+    function handleDeleteNullField(params) {
+        if (params.dob === null || params.dob === undefined || params.dob === '' || params.dob === 'Invalid date') {
+            delete params.dob;
+        };
+        if (params.fullname === null || params.fullname === undefined || params.fullname === '') {
+            delete params.fullname;
+        };
+        if (params.phone === null || params.phone === undefined || params.phone === '') {
+            delete params.phone;
+        };
+        if (params.address === null || params.address === undefined || params.address === '') {
+            delete params.address;
+        };
+        if (params.personalIdentificationNumber === null || params.personalIdentificationNumber === undefined || params.personalIdentificationNumber === '') {
+            delete params.personalIdentificationNumber;
+        };
+        if (params.gender === null || params.gender === undefined || params.gender === '') {
+            delete params.gender;
+        };
+        return params;
+    }
+
     function handleEditInfor() {
-        formik.handleSubmit();
-        const formData = new FormData();
         if (editedAvatar) {
-            formData.append('avatar', editedAvatar);
-            // dispatch(thunkEditProfile(formData));
+            dispatch(thunkEditProfile({avatar: imageToBase64}));
             setEditedAvatar();
+            setImageToBase64('');
         }
+        formik.handleSubmit();
         setIsEditing(false);
     }
 
@@ -105,8 +123,17 @@ function AccountInforScreen(props) {
             setEditedAvatar(file);
             setIsEditing(true);
             e.target.value = null;
+            getBase64(file);
         }
     };
+
+    function getBase64(file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            setImageToBase64(reader.result);
+        };
+    }
 
     function handleChangeAvatarClick() {
         accountInforAvatar.current.click();
@@ -224,7 +251,7 @@ function AccountInforScreen(props) {
                                                                             {index === 4
                                                                                 ? genders.find(item => item.value === currentAccount?.['gender'])?.text
                                                                                 : (index === 5
-                                                                                    ? (currentAccount?.['dob'] === null 
+                                                                                    ? (currentAccount?.['dob'] === null
                                                                                         ? 'Nhập ngày sinh...'
                                                                                         :Utils.formatDateTime(currentAccount?.['dob'], 'DD/MM/YYYY'))
                                                                                     : currentAccount?.[`${item.field}`]

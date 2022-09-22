@@ -36,8 +36,6 @@ function SignUpScreen(props) {
                 ...values
             };
             delete params['confirm'];
-            // let hashPassword = Utils.sha256(params.password);
-            // params.password = hashPassword;
             console.log(`${sTag} on submit: ${JSON.stringify(params)}`);
             try {
                 const res = await authApi.signUp(params);
