@@ -1,5 +1,9 @@
 const User = require('../models/User');
+const Image = require('../models/Image');
 const moment = require("moment");
+const {
+    cloudinary
+} = require('../utils/cloudinary');
 
 const userController = {
     // get all users
@@ -64,7 +68,8 @@ const userController = {
                 phone,
                 address,
                 gender,
-                dob
+                dob,
+                avatar
             } = req.body;
             const accessToken = req.headers.authorization.split(' ')[1];
 
@@ -80,6 +85,29 @@ const userController = {
                 })
             }
 
+            if (avatar) {
+                const uploadAvatar = await cloudinary.uploader.upload(avatar);
+
+                await User.updateOne({
+                    accessToken: accessToken
+                }, {
+                    username: username,
+                    phone: phone,
+                    address: address,
+                    gender: gender,
+                    dob: dob,
+                    avatar: uploadAvatar.secure_url,
+                });
+
+                const responseAccount = await User.findOne({
+                    email: account.email
+                });
+
+                return res.send({
+                    result: "success",
+                    account: responseAccount,
+                })
+            }
 
             await User.updateOne({
                 accessToken: accessToken
@@ -103,6 +131,71 @@ const userController = {
 
         } catch (error) {
             return res.send({
+                result: 'failed',
+                message: error,
+            })
+        }
+    },
+
+    uploadImage: async (req, res) => {
+        try {
+            const {
+                title,
+                description,
+                src
+            } = req.body;
+
+            const accessToken = req.headers.authorization.split(' ')[1];
+
+            const account = await User.findOne({
+                accessToken: accessToken,
+            });
+
+            // store in cloudinary
+            const fileStr = src;
+            const uploadResponse = await cloudinary.uploader.upload(fileStr, {
+                upload_preset: 'TView_Image_Storage'
+            })
+
+            // store image url into image storage
+            const image = new Image({
+                title: title,
+                userId: account._id,
+                description: description,
+                src: uploadResponse.secure_url
+            });
+
+            await image.save();
+            res.send({
+                result: 'success',
+                image: image
+            })
+
+        } catch (error) {
+            return res.send({
+                result: 'failed',
+                message: error
+            })
+        }
+    },
+
+    getMyImage: async (req, res) => {
+        try {
+            const accessToken = req.headers.authorization.split(' ')[1];
+            const account = await User.findOne({
+                accessToken: accessToken,
+            })
+            const myImages = await Image.find({
+                userId: account._id,
+            });
+
+
+            return res.send({
+                result: 'success',
+                myImages: myImages,
+            })
+        } catch (error) {
+            res.send({
                 result: 'failed',
                 message: error,
             })

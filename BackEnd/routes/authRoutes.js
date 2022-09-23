@@ -5,24 +5,24 @@ const authMiddleware = require('../middlewares/authMiddleware');
 
 
 //REGISTER
-router.post('/register', authController.registerUser);
+router.post('/api/v1/auth/register', authController.registerUser);
 
 //LOGIN
-router.post('/login', authController.loginUser);
+router.post('/api/v1/auth/login', authController.loginUser);
 
 //refresh
-router.post('/refresh', authController.requestRefreshToken);
+router.post('/api/v1/auth/refresh', authController.requestRefreshToken);
 
 //log out
-router.post('/logout',  authController.logoutUser);
+router.post('/api/v1/auth/logout',  authController.logoutUser);
 
 //change password
-router.put('/change-password', authController.changePassword);
+router.put('/api/v1/auth/change-password', authController.changePassword);
 
 //forgot password
-router.post('/request-reset-password', authController.requestResetPassword)
+router.post('/api/v1/auth/request-reset-password', authController.requestResetPassword)
 
 //reset password
-router.post('/reset-password', authController.resetPassword);
+router.post('/api/v1/auth/reset-password', authController.resetPassword);
 
 module.exports = router;

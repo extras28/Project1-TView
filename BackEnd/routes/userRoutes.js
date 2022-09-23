@@ -4,18 +4,24 @@ const userController = require('../controllers/userController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
 // get all users
-router.get('/', authMiddleware.verifyTokenAndAdminAuth, userController.getAllUsers);
+router.get('/api/v1/user/', authMiddleware.verifyTokenAndAdminAuth, userController.getAllUsers);
 
 //delete users
-router.delete('/delete/:id',authMiddleware.verifyTokenAndAdminAuth, userController.deleteUser);
+router.delete('/api/v1/user/delete/:id',authMiddleware.verifyTokenAndAdminAuth, userController.deleteUser);
 
 //get user infor
-router.get('/detail/:id', userController.getInfor);
+router.get('/api/v1/user/detail/:id', userController.getInfor);
 
 //get own infor
-router.get('/profile', userController.getInfor);
+router.get('/api/v1/user/profile', userController.getInfor);
 
 //edit profile
-router.post('/edit-profile', userController.editProfile)
+router.post('/api/v1/user/edit-profile', userController.editProfile);
+
+//upload image
+router.post('/api/v1/user/upload-image', userController.uploadImage);
+
+//get own images
+router.get('/api/v1/user/get-my-images',userController.getMyImage);
 
 module.exports = router;
