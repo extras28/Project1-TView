@@ -50,7 +50,7 @@ function HeaderDashboard(props) {
                         onClick={()=>handleNavigate('/upload')}
                     />}
                 </div>
-                {!isPin && <AppSearchBar placeholder='Search' name='searchBarDashboard'/>}
+
                 <div className='d-flex flex-row'>
                     <AppAvatar 
                         src = {

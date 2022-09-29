@@ -24,4 +24,10 @@ router.post('/api/v1/user/upload-image', userController.uploadImage);
 //get own images
 router.get('/api/v1/user/get-my-images',userController.getMyImage);
 
+//delete one or more image
+router.delete('/api/v1/image/delete/:imgId',userController.deleteImage);
+
+//edit image detail
+router.put('/api/v1/image/edit/:imgId',userController.editImage);
+
 module.exports = router;

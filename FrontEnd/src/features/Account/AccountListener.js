@@ -5,6 +5,7 @@ import Utils from '../../general/utils/Utils';
 import UserHelper from '../../general/helpers/UserHelper';
 import { thunkGetAccountInfor } from '../../app/authSlice';
 import { thunkGetOwnImages } from './AccountSlice';
+import { thunkGetAllAccount } from 'Admin/adminSlice';
 
 AccountListener.propTypes = {
 
@@ -20,6 +21,7 @@ function AccountListener(props) {
     useEffect(() => {
         console.log(`${sTag} loggedInUser changed`);
         if (Utils.isObjectEmpty(loggedInUser) && UserHelper.checkAccessTokenValid()) {
+            dispatch(thunkGetAllAccount('true'))
             dispatch(thunkGetAccountInfor());
             dispatch(thunkGetOwnImages());
         }

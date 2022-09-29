@@ -21,7 +21,6 @@ const imageApi = {
 
     // lay chi tiet mot anh
     getImageDetail: (imgId) => {
-        console.log(imgId);
         const url = `/get-image-detail/${imgId}`;
         return axiosClient.get(url);
     }

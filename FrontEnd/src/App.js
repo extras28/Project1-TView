@@ -6,6 +6,7 @@ import PrivateRoute from "./general/components/AppRoutes/PrivateRoute";
 import SignUpScreen from "./features/Auth/screens/SignUpScreen";
 import "react-toastify/dist/ReactToastify.css";
 
+
 //load bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Suspense, useEffect } from 'react';

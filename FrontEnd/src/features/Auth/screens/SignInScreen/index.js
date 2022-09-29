@@ -17,6 +17,7 @@ import { thunkSignIn } from '../../../../app/authSlice';
 import UserHelper from '../../../../general/helpers/UserHelper';
 import ToastHelper from '../../../../general/helpers/ToastHelper';
 import { useDispatch } from 'react-redux';
+import { thunkGetAllAccount } from 'Admin/adminSlice';
 
 
 SignInScreen.propTypes = {
@@ -38,16 +39,14 @@ function SignInScreen(props) {
         onSubmit: async (values) => {
             const params = { ...values };
             delete params['remember'];
-            // let inputPassword = params.password;
-            // params.password = Utils.sha256(inputPassword);
             console.log(`${sTag} on submit: ${JSON.stringify(params)}`);
             try {
                 const res = unwrapResult(await dispatch(thunkSignIn(params)));
-                console.log(res);
                 if (res) {
                     const displayName = UserHelper.getDisplayName(res.account);
                     ToastHelper.showSuccess(`Xin chào, ${displayName}`);
                     if(res.account.isAdmin){
+                        dispatch(thunkGetAllAccount('true'))
                         navigate('/admin');
                     } else {
                         navigate('/dashboard');

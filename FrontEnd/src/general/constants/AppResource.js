@@ -7,6 +7,9 @@ const AppResource = {
     // icons
     icons: {
     //   icLogoHeader: require("assets/icons/ic_logo_header.png"),
+    icFlag: require("assets/icons/pen-field.png"),
+    icBin: require("assets/icons/trash.png"),
+    icTrash: require("assets/icons/ic_trash.png")
     },
   
     // images

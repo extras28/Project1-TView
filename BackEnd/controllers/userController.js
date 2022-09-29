@@ -200,6 +200,64 @@ const userController = {
                 message: error,
             })
         }
+    },
+
+    deleteImage: async (req, res) => {
+        try {
+            const {
+                imgId
+            } = req.params;
+            if (imgId) {
+                await Image.findByIdAndDelete(imgId);
+                res.send({
+                    result: 'success',
+                    message: 'Xóa ảnh thành công'
+                })
+            } else {
+                res.send({
+                    result: 'failed',
+                    message: 'Ảnh không tồn tại hoặc đã bị xóa'
+                })
+            }
+
+        } catch (error) {
+            res.send({
+                result: 'failed',
+                message: error
+            })
+        }
+    },
+
+    editImage: async (req, res) => {
+        try {
+            const {
+                title,
+                description
+            } = req.body;
+            const {
+                imgId
+            } = req.params;
+            if (imgId) {
+                await Image.findByIdAndUpdate(imgId,{
+                    title: title,
+                    description: description,
+                });
+                res.send({
+                    result: 'success',
+                    message: 'Sửa đổi ảnh thành công'
+                })
+            } else {
+                res.send({
+                    result: 'failed',
+                    message: 'Ảnh không tồn tại hoặc đã bị xóa'
+                })
+            }
+        } catch (error) {
+            res.send({
+                result: 'failed',
+                message: error
+            })
+        }
     }
 
 }

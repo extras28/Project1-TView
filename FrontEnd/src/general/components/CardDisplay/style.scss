@@ -12,7 +12,23 @@
         width: 100%;
         height: auto;
     }
-    &:hover{
+
+    &:hover {
         cursor: pointer;
     }
+    &:hover > .CardDisplay_Button{
+        display: flex;
+    }
+
+    &_Button {
+        display: none;
+        position: absolute;
+        right: 5%;
+        top: 3%;
+
+        i {
+            color: #FFFFFF;
+        }
+    }
+
 }

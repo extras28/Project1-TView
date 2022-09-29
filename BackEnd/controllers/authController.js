@@ -233,10 +233,10 @@ const authController = {
 
     changePassword: async function (req, res) {
         try {
+            const accessToken = req.headers.authorization.split(' ')[1];
             const user = await User.findOne({
-                email: req.body.email
+                accessToken: accessToken
             });
-
             const password = await sha256(req.body.password);
             const newPassword = await sha256(req.body.newPassword);
             if (user) {

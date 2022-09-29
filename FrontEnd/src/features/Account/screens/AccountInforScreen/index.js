@@ -153,6 +153,7 @@ function AccountInforScreen(props) {
     return (
         <BaseLayoutDashboard>
             <AccountContent
+                setting={true}
                 title='Thông tin tài khoản'
                 content={(
                     <div>

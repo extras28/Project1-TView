@@ -1,0 +1,13 @@
+.ModalEditImage {
+    &_Image {
+        overflow: hidden;
+        position: relative;
+        border: none;
+
+        img {
+            object-fit: cover;
+            width: 100%;
+            height: auto;
+        }
+    }
+}

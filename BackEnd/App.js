@@ -2,31 +2,37 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const db = require('./config/db/index');
 const cors = require('cors');
-const authRouter= require('./routes/authRoutes')
-const homeRouter= require('./routes/homeRoute')
-const userRouter= require('./routes/userRoutes')
+const authRouter = require('./routes/authRoutes');
+const homeRouter = require('./routes/homeRoute');
+const userRouter = require('./routes/userRoutes');
+const adminRouter = require('./routes/adminRouter');
 
 const app = express();
 
 const corsOpts = {
   origin: '*',
   methods: [
-      'GET',
-      'POST',
-      'PUT',
-      'DELETE'
+    'GET',
+    'POST',
+    'PUT',
+    'DELETE'
   ],
 
   allowedHeaders: [
-      'Content-Type',
-      'Authorization'
+    'Content-Type',
+    'Authorization'
   ],
 };
 
 app.use(cors(corsOpts));
 
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json({
+  limit: '50mb'
+}));
+app.use(express.urlencoded({
+  limit: '50mb',
+  extended: true
+}));
 
 // connect to database
 db.connect();
@@ -35,17 +41,21 @@ db.connect();
 app.use(cookieParser());
 app.use(express.json());
 
-app.use(userRouter,function (req,res,next) {
+app.use(userRouter, function (req, res, next) {
   next()
-})
+});
 
-app.use(authRouter,function (req,res,next) {
+app.use(authRouter, function (req, res, next) {
   next()
-})
+});
 
-app.use(homeRouter,function (req,res,next) {
+app.use(homeRouter, function (req, res, next) {
   next()
-})
+});
+
+app.use(adminRouter, function (req, res, next) {
+  next()
+});
 
 
 const PORT = process.env.PORT || 8000;

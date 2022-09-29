@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { thunkGetOwnImages } from 'features/Account/AccountSlice';
+import g_showPrivateImageDetais from 'general/utils/Globals'
+import { thunkGetImageDetail } from 'features/IgameDetailScreen/ImageSlice';
 
 
 PersonalPage.propTypes = {
@@ -135,7 +137,9 @@ function PersonalPage(props) {
 
     useEffect(()=>{
             dispatch(thunkGetOwnImages());
-    },[])
+    },[]);
+
+
 
     return (
         <BaseLayoutDashboard>
@@ -171,7 +175,12 @@ function PersonalPage(props) {
                             >
                                 <Masonry>
                                 {myImages.map((item, index) => {
-                                            return <CardDisplay  src={item.src} key={item._id}/>
+                                            return <CardDisplay  
+                                                owner={true}
+                                                src={item.src} 
+                                                key={item._id} 
+                                                imgId={item._id}
+                                            />
                                         })}
                                 </Masonry>
                             </ResponsiveMasonry>
