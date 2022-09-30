@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import imageApi from '../../api/imageApi';
 import ToastHelper from '../../general/helpers/ToastHelper';
 import { useNavigate } from 'react-router-dom';
+import AppLoader from 'general/components/AppLoader';
 
 Upload.propTypes = {
     
@@ -22,6 +23,7 @@ function Upload(props) {
     const [previewSource, setPreviewSource] = useState();
     const [imageToBase64, setImageToBase64] = useState('');
     const imageInput = useRef();
+    const [loading, setLoading] = useState(false);
 
     const currentAccount = useSelector(state => state?.auth?.currentAccount);
 
@@ -63,13 +65,22 @@ function Upload(props) {
         },
         onSubmit: async (values) => {
             try {
+                setLoading(true)
                 const params = {
                     ...values
                 };
                 params.src = imageToBase64;
                 const res = await imageApi.uploadImage(params);
                 setPreviewSource();
-                ToastHelper.showSuccess('Ảnh của bạn đã được chia sẻ');
+                if(res.result==='success'){
+                    setLoading(false);
+                    ToastHelper.showSuccess('Ảnh của bạn đã được chia sẻ');
+                } else{
+                    setLoading(false)
+                    ToastHelper.showError('Đăng ảnh không thành công')
+                }
+                formik.getFieldHelpers('title').setValue('');
+                formik.getFieldHelpers('description').setValue('');
             } catch (error){
                 console.log(`${sTag} upload image error: ${error.message}`);
             }
@@ -82,7 +93,11 @@ function Upload(props) {
             <HeaderDashboard isPin={true}/>
             <form onSubmit={formik.handleSubmit}>
             <div className='Upload my-10 d-flex align-items-center justify-content-center'>
-                <div className='d-flex flex-lg-row flex-column bg-white w-lg-50 w-75 rounded-5'>
+                {loading
+                ? <AppLoader 
+                    customHeight='100%'
+                />
+                :<div className='d-flex flex-lg-row flex-column bg-white w-lg-50 w-75 rounded-5'>
 
                     {/* iamge input */}
                         
@@ -118,7 +133,7 @@ function Upload(props) {
                         <div>
                             <div className='d-flex flex-row align-items-center my-10'>
                                 <AppAvatar 
-                                    src=''
+                                    src={currentAccount?.avatar}
                                     size='60px'
                                 />
                                 <span className='ml-4 font-weight-boldest cursor-pointer' style={{fontSize: '18px'}}>
@@ -164,7 +179,7 @@ function Upload(props) {
                             />
                         </div>
                     </div>
-                </div>
+                </div>}
             </div>
             </form>
         </div>

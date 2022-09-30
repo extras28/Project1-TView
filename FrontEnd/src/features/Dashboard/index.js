@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { thunkGetAllImage } from './dashboardSlice';
 import { thunkGetImageDetail } from 'features/IgameDetailScreen/ImageSlice';
 import { useNavigate } from 'react-router-dom';
+import EmptyView from 'general/components/EmptyView';
 
 Dashboard.propTypes = {
     
@@ -36,7 +37,9 @@ function Dashboard(props) {
 
     return (
         <BaseLayoutDashboard>
-            <div  className='min-vh-100'>
+            {images.length === 0
+            ? <EmptyView  />
+            :<div  className='min-vh-100'>
                 <Zoom left>
                     <ResponsiveMasonry
                     columnsCountBreakPoints={{576: 3, 768: 5, 992: 5, 1200: 7, 1400: 7}}
@@ -50,7 +53,7 @@ function Dashboard(props) {
                     </Masonry>
                     </ResponsiveMasonry>
                 </Zoom>
-            </div>
+            </div>}
         </BaseLayoutDashboard>
     );
 }

@@ -168,9 +168,12 @@ const adminController = {
                 imgId
             } = req.params;
 
-            const {
-                isAdmin
-            } = req.body;
+            const accessToken = req.headers.authorization.split(' ')[1];
+            const account = await User.findOne({
+                accessToken: accessToken,
+            })
+
+            const isAdmin = account.isAdmin
 
             const image = await Image.findById(imgId);
 
@@ -208,11 +211,19 @@ const adminController = {
             const {
                 title,
                 description,
-                isAdmin
             } = req.body;
             const {
                 imgId
             } = req.params;
+
+            console.log(req.body, req.params);
+
+            const accessToken = req.headers.authorization.split(' ')[1];
+            const account = await User.findOne({
+                accessToken: accessToken,
+            })
+
+            const isAdmin = account.isAdmin
 
             const image = await Image.findById(imgId);
 

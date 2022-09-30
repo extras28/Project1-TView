@@ -80,7 +80,7 @@ function ModalEditUser(props) {
             handleDeleteNullField(params);
             try {
                 dispatch(thunkEditAccount(params));
-                ToastHelper.showSuccess('Thay đổi thông tin cá nhân thành công');
+                ToastHelper.showSuccess('Thay đổi thông tin tài khoản thành công');
                 setIsEditing(false);
             } catch (err) {
                 ToastHelper.showError('Thay đổi thông tin thất bại')

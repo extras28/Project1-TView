@@ -242,9 +242,10 @@ const userController = {
                     title: title,
                     description: description,
                 });
+                const ressponseImage = await Image.findById(imgId);
                 res.send({
                     result: 'success',
-                    message: 'Sửa đổi ảnh thành công'
+                    image: ressponseImage,
                 })
             } else {
                 res.send({

@@ -41,6 +41,7 @@ export const thunkEditProfile = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
+    isGettingInfor: false,
     loggedIn: false,
     isSigningIn: false,
     currentAccount: {},

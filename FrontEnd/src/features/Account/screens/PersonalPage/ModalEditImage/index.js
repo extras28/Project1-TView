@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import './style.scss';
 import BaseTextField from 'general/components/Forms/BaseTextField';
 import { useFormik } from 'formik';
@@ -9,32 +9,54 @@ import AppButton from 'general/components/AppButton';
 import { useState } from 'react';
 import AppLoader from 'general/components/AppLoader';
 import { useEffect } from 'react';
+import { thunkAdminEditImage } from 'features/Dashboard/dashboardSlice';
+import ToastHelper from 'general/helpers/ToastHelper';
+// import { thunkEditImage } from 'features/Account/AccountSlice';
+import { thunkEditImage, thunkGetImageDetail } from 'features/IgameDetailScreen/ImageSlice';
 
 ModalEditImage.propTypes = {
     show: PropTypes.bool,
     onClose: PropTypes.func,
+    imgId: PropTypes.string,
 };
 
 ModalEditImage.defaultProps = {
     show: false,
     onClose: null,
+    imgId: ''
 }
 
 function ModalEditImage(props) {
-    const {show, onClose} = props;
+    const {
+        show,
+        onClose,
+        imgId
+    } = props;
     const [edit, setEdit] = useState();
+    const dispatch = useDispatch();
+
+    const currentAccount = useSelector(state => state?.auth?.currentAccount);
 
     const formik = useFormik({
-        initialValues:{
+        initialValues: {
             title: '',
             description: '',
         },
-        onSubmit:{
-
+        onSubmit: async (values) => {
+            try {
+                const params = {...values};
+                params.imgId = imgId;
+                if(!currentAccount.isAdmin){
+                    dispatch(thunkEditImage(params));
+                    setEdit(false);
+                } else{
+                    dispatch(thunkAdminEditImage(params));
+                }
+            } catch (error) {
+                console.log(error);
+                ToastHelper.showError('Thay đổi thông tin ảnh không thành công');
+            }
         },
-        // validationSchema:{
-
-        // }
     })
 
     function handleClose(){
@@ -125,6 +147,7 @@ function ModalEditImage(props) {
                             <AppButton
                                 text='Lưu'
                                 className='btn-green'
+                                onClick={formik.handleSubmit}
                             />
                         </div>
                         :<div className='d-flex flex-row justify-content-end mr-4 mb-4'>

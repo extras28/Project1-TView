@@ -33,8 +33,8 @@ const adminApi = {
     },
 
     //edit image
-    editImge: (imgId, params) => {
-        const url = `/admin/edit-image/${imgId}`;
+    editImge: (params) => {
+        const url = `/admin/edit-image/${params.imgId}`;
         return axiosClient.put(url, params);
     },
 };

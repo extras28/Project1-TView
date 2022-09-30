@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import { thunkGetOwnImages } from 'features/Account/AccountSlice';
 import g_showPrivateImageDetais from 'general/utils/Globals'
 import { thunkGetImageDetail } from 'features/IgameDetailScreen/ImageSlice';
+import EmptyView from 'general/components/EmptyView';
 
 
 PersonalPage.propTypes = {
@@ -167,7 +168,9 @@ function PersonalPage(props) {
 
                 <span className='PersonalPage_Profile py-5 text-center sticky-top bg-white' style={{fontSize: '20px', fontWeight: '600', height: '80px'}}>Tất cả ảnh</span>
 
-                <div className='d-flex flex-column align-items-center mt-5'>
+                {myImages.length === 0
+                ? <EmptyView />
+                :<div className='d-flex flex-column align-items-center mt-5'>
                     <div  className='min-vh-100 w-100'>
                         <Zoom left>
                             <ResponsiveMasonry
@@ -186,7 +189,7 @@ function PersonalPage(props) {
                             </ResponsiveMasonry>
                         </Zoom>
                     </div>
-                </div>
+                </div>}
             </div>
         </BaseLayoutDashboard>
     );

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './style.scss'
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { thunkGetImageDetail } from 'features/IgameDetailScreen/ImageSlice';
 import { Dropdown } from 'react-bootstrap';
 import AppResource from 'general/constants/AppResource';
@@ -10,6 +10,8 @@ import AppButton from '../AppButton';
 import AppDeleteModal from '../AppModalDelete';
 import { useState } from 'react';
 import ModalEditImage from 'features/Account/screens/PersonalPage/ModalEditImage';
+import { thunkAdminDeleteImage } from 'features/Dashboard/dashboardSlice';
+import { thunkDeleteImage } from 'features/Account/AccountSlice';
 
 CardDisplay.propTypes = {
     src: PropTypes.string,
@@ -41,6 +43,8 @@ function CardDisplay(props) {
     const [showEditModal, setShowEditModal] = useState(false);
     const dispatch = useDispatch();
 
+    const currentAccount = useSelector(state => state?.auth?.currentAccount)
+
     function handleViewDetail() {
         if (onClick) {
             onClick();
@@ -48,7 +52,11 @@ function CardDisplay(props) {
     }
 
     function handleDelete(){
-        console.log('deleted');
+        if(!currentAccount.isAdmin){
+            dispatch(thunkDeleteImage(imgId));
+        } else {
+            dispatch(thunkAdminDeleteImage(imgId));
+        }
     }
 return (
     <div 
@@ -90,6 +98,7 @@ return (
         <ModalEditImage 
             show={showEditModal}
             onClose={()=>setShowEditModal(false)}
+            imgId = {imgId}
         />
     </div>
 );

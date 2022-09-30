@@ -20,8 +20,8 @@ const accountApi = {
     },
     
     //edit image
-    editImage: (imgId, params) => {
-        const url = `/image/edit/${imgId}`;
+    editImage: (params) => {
+        const url = `/image/edit/${params.imgId}`;
         return axiosClient.put(url, params);
     },
 

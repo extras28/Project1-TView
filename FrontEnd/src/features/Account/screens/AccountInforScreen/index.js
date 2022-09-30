@@ -16,6 +16,7 @@ import { useEffect } from 'react';
 import Utils from '../../../../general/utils/Utils';
 import ToastHelper from '../../../../general/helpers/ToastHelper';
 import { thunkEditProfile } from '../../../../app/authSlice';
+import AppLoader from 'general/components/AppLoader';
 
 const genders = [
     { value: 'MALE', text: 'Nam' },
@@ -49,7 +50,7 @@ function AccountInforScreen(props) {
     const accountInforAvatar = useRef();
 
     const currentAccount = useSelector(state => state?.auth?.currentAccount);
-
+    const isGettingInfor = useSelector(state => state?.auth?.isGettingInfor)
     const formik = useFormik({
         initialValues: {
             username: '',
@@ -158,7 +159,11 @@ function AccountInforScreen(props) {
                 content={(
                     <div>
                         {/* thong tin nguoi dung */}
-                        <div className='bg-white border m-3 p-5'>
+                        {isGettingInfor
+                        ? <AppLoader 
+                            customHeight='100%'
+                        />
+                        :<div className='bg-white border m-3 p-5'>
                             <div className='row d-flex align-items-start justify-content-center'>
 
                                 {/* avatar */}
@@ -286,7 +291,7 @@ function AccountInforScreen(props) {
                                     </form>
                                 </div>
                             </div>
-                        </div>
+                        </div>}
                     </div>
                 )}
             />
